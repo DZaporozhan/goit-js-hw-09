@@ -13,7 +13,7 @@ const refs = {
 let selectedDate = null;
 let intervalID = null;
 const nowDate = new Date();
-let now = Date.now();
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -21,7 +21,6 @@ const options = {
   minuteIncrement: 1,
 
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
     if (selectedDates[0] < nowDate) {
       Notify.failure('Please choose a date in the future', {
         timeout: 3000,

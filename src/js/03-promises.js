@@ -1,49 +1,42 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 const refs = {
-  delay: document.querySelector('[name="delay"]'),
-  step: document.querySelector('[name="step"]'),
-  amount: document.querySelector('[name="amount"]'),
-  submit: document.querySelector('.form button'),
+  form: document.querySelector('.form'),
 };
 
-const delay = refs.delay.addEventListener('input', evn => {
-  console.log(evn.target.value);
-  return evn.target.value;
-});
-const step = refs.step.addEventListener('input', evn => {
-  console.log(evn.target.value);
-  return evn.target.value;
-});
-const amount = refs.amount.addEventListener('input', evn => {
-  console.log(evn.target.value);
-  return evn.target.value;
-});
+refs.form.addEventListener('submit', handleSubmit);
 
-refs.submit.addEventListener('submit', e => {
-  e.preventDefault();
-  for (let i = 0; i < amount; i++) {
-    createPromise();
+function handleSubmit(evn) {
+  evn.preventDefault();
+  const {
+    elements: { delay, step, amount },
+  } = evn.currentTarget;
+  for (let i = 0; i < Number(amount.value); i++) {
+    let promDelay = Number(delay.value) + Number(step.value) * i;
+    let position = i;
+    position += 1;
+    createPromise(position, promDelay)
+      .then(onMakeOrderSucess)
+      .catch(onMakeOrderError);
   }
-  createPromise();
-});
+}
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (shouldResolve) {
-        resolve('Success! Value passed to resolve function');
+        resolve(`✅ Fulfilled promise ${position} in ${delay}ms`);
       } else {
-        reject('Error! Error passed to reject function');
+        reject(`❌ Rejected promise ${position} in ${delay}ms`);
       }
     }, delay);
-    return promise;
   });
 }
 
-createPromise(2, 1500)
-  .then(({ position, delay }) => {
-    console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  })
-  .catch(({ position, delay }) => {
-    console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-  });
+function onMakeOrderSucess(result) {
+  Notify.success(result);
+}
+function onMakeOrderError(result) {
+  Notify.failure(result);
+}

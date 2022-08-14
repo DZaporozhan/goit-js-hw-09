@@ -13,6 +13,7 @@ const refs = {
 let selectedDate = null;
 let intervalID = null;
 const nowDate = new Date();
+let now = Date.now();
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -41,7 +42,7 @@ refs.start.addEventListener('click', onTimer);
 
 function onTimer() {
   intervalID = setInterval(() => {
-    ms = selectedDate - Date.now();
+    let ms = selectedDate - Date.now();
     const timeComponent = convertMs(ms);
     console.log(timeComponent);
     updateClock(timeComponent);
